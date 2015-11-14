@@ -50,7 +50,11 @@ describe('Server', () => {
 
   describe('POST /pizzas', () => {
 
-    it('should receive and store data', (done) => {
+    beforeEach(() => {
+      app.locals.pizzas = {};
+    });
+
+    it('sheuld receive and store data', (done) => {
       // Our implementation will go here…
       assert(true);
       done();
