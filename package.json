@@ -12,6 +12,7 @@
     "express": "^4.13.3"
   },
   "devDependencies": {
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "request": "^2.65.0"
   }
 }

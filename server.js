@@ -1,11 +1,17 @@
 const express = require('express');
 const app = express();
 
+const path = require('path');
+
+app.use(express.static('static'));
+
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Pizza Express';
 
+app.set('view engine', 'jade');
+
 app.get('/', (request, response) => {
-  response.send('Hello World!');
+  response.render('index');
 });
 
 if (!module.parent) {
