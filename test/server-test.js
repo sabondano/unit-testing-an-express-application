@@ -1,6 +1,7 @@
 const assert = require('assert');
 const request = require('request');
 const app = require('../server');
+const fixtures = require('./fixtures');
 
 describe('Server', () => {
 
@@ -54,10 +55,18 @@ describe('Server', () => {
       app.locals.pizzas = {};
     });
 
-    it('sheuld receive and store data', (done) => {
-      // Our implementation will go here…
-      assert(true);
-      done();
+    it('should receive and store data', (done) => {
+      var payload = { pizza: fixtures.validPizza }; 
+
+      this.request.post('/pizzas', { form: payload }, (error, response) => {
+        if (error) { done(error); }
+
+        var pizzaCount = Object.keys(app.locals.pizzas).length;
+
+        assert.equal(pizzaCount, 1, `Expected 1 pizzas, found ${pizzaCount}`);
+
+        done();
+      });
     });
 
     it('should not return 404', (done) => {
@@ -67,6 +76,33 @@ describe('Server', () => {
         done();
       });
     });
+  });
+
+  describe('GET /pizzas/:id', () => {
+
+    beforeEach(() => {
+      app.locals.pizzas.testPizza = fixtures.validPizza;
+    });
+
+    it('should return a page that has the title of the pizza', (done) => {
+      var pizza = app.locals.pizzas.testPizza;
+
+      this.request.get('/pizzas/testPizza', (error, response) => {
+        if (error) { done(error); }
+        assert(response.body.includes(pizza.name),
+               `"${response.body}" does not include "${pizza.name}".`);
+               done();
+      });
+    });
+
+    it('should not return 404', (done) => {
+      this.request.get('/pizzas/testPizza', (error, response) => {
+        if (error) { done(error); }
+        assert.notEqual(response.statusCode, 404);
+        done();
+      });
+    });
+
   });
 
 });
